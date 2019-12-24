@@ -43,9 +43,10 @@ const sanitizeResource = data => {
     return result;
 };
 
-export default introspectionResults => (aorFetchType, resource) => response => {
+export default introspectionResults => (aorFetchType, resource) => res => {
 
-    //         // TODO NOTE The client we are using might be stripping the initial data tag from out responses, which is why we say response.items not response.data.items apollo might not do that
+    const response = res.data;
+
     switch (aorFetchType) {
 
         case GET_MANY_REFERENCE:

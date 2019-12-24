@@ -5,7 +5,7 @@ const buildGetListVariables = introspectionResults => (
     aorFetchType,
     params
 ) => {
-    result = {};
+    var result = {};
 
     if (params.filter) {
         const filters = Object.keys(params.filter).reduce((acc, key) => {
