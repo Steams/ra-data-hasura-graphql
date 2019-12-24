@@ -1,6 +1,7 @@
+import { GET_ONE, GET_LIST, GET_MANY, GET_MANY_REFERENCE, DELETE, CREATE,UPDATE,UPDATE_MANY, DELETE_MANY} from './fetchActions';
+
 import merge from 'lodash/merge';
 import buildDataProvider from 'ra-data-graphql';
-import { DELETE, DELETE_MANY, UPDATE, UPDATE_MANY } from 'ra-core';
 
 import defaultBuildQuery from './buildQuery';
 

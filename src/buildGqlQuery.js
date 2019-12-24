@@ -1,5 +1,5 @@
-import { GET_LIST, GET_MANY, GET_MANY_REFERENCE, DELETE, CREATE,UPDATE,UPDATE_MANY, DELETE_MANY} from 'ra-core';
-import { QUERY_TYPES } from 'ra-data-graphql';
+import { GET_LIST, GET_MANY, GET_MANY_REFERENCE, DELETE, CREATE,UPDATE,UPDATE_MANY, DELETE_MANY} from './fetchActions';
+
 import { TypeKind } from 'graphql';
 import * as gqlTypes from 'graphql-ast-types-browser';
 

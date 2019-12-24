@@ -2,8 +2,7 @@
     "name": "ra-data-hasura-graphql",
     "version": "0.1.0",
     "description": "A data provider for connecting react-admin to a Hasura endpoint",
-    "main": "lib/index.js",
-    "module": "esm/index.js",
+    "main": "dist/index.js",
     "sideEffects": false,
     "repository": {
         "type": "git",
@@ -26,25 +25,33 @@
     ],
     "license": "MIT",
     "scripts": {
-        "build": "yarn run build-cjs && yarn run build-esm",
-        "build-cjs": "rimraf ./lib && tsc",
-        "build-esm": "rimraf ./esm && tsc --outDir esm --module es2015",
-        "watch": "rimraf ./lib && tsc --watch"
+        "build": "webpack --mode production"
     },
     "dependencies": {
         "graphql-ast-types-browser": "~1.0.2",
         "graphql-tag": "^2.10.1",
         "lodash": "~4.17.5",
-        "pluralize": "~7.0.0",
-        "ra-data-graphql": "^3.0.2"
+        "ra-core": "^3.1.1",
+        "ra-data-graphql": "^3.0.2",
+        "react": "^16.12.0",
+        "react-admin": "^3.1.1",
+        "react-dom": "^16.12.0",
+        "react-final-form": "^6.3.3",
+        "react-redux": "^7.1.3",
+        "react-router": "^5.1.2",
+        "react-router-dom": "^5.1.2",
+        "redux": "^4.0.5",
+        "redux-saga": "^1.1.3"
     },
     "peerDependencies": {
         "graphql": "^14.1.1",
         "ra-core": "^3.0.0"
     },
     "devDependencies": {
-        "cross-env": "^5.2.0",
+        "@babel/core": "^7.7.7",
+        "babel-loader": "^8.0.6",
         "graphql": "^14.5.8",
-        "rimraf": "^2.6.3"
+        "webpack": "^4.41.4",
+        "webpack-cli": "^3.3.10"
     }
 }
