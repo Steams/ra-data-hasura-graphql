@@ -42,40 +42,40 @@ export const buildFields = introspectionResults => fields =>
             r => r.type.name === type.name
         );
 
-        if (linkedResource) {
-            return [
-                ...acc,
-                gqlTypes.field(
-                    gqlTypes.name(field.name),
-                    null,
-                    null,
-                    null,
-                    gqlTypes.selectionSet([gqlTypes.field(gqlTypes.name('id'))])
-                ),
-            ];
-        }
+        // if (linkedResource) {
+        //     return [
+        //         ...acc,
+        //         gqlTypes.field(
+        //             gqlTypes.name(field.name),
+        //             null,
+        //             null,
+        //             null,
+        //             gqlTypes.selectionSet([gqlTypes.field(gqlTypes.name('id'))])
+        //         ),
+        //     ];
+        // }
 
-        const linkedType = introspectionResults.types.find(
-            t => t.name === type.name
-        );
+        // const linkedType = introspectionResults.types.find(
+        //     t => t.name === type.name
+        // );
 
-        if (linkedType) {
-            return [
-                ...acc,
-                gqlTypes.field(
-                    gqlTypes.name(field.name),
-                    null,
-                    null,
-                    null,
-                    gqlTypes.selectionSet([
-                        ...buildFragments(introspectionResults)(
-                            linkedType.possibleTypes || []
-                        ),
-                        ...buildFields(introspectionResults)(linkedType.fields),
-                    ])
-                ),
-            ];
-        }
+        // if (linkedType) {
+        //     return [
+        //         ...acc,
+        //         gqlTypes.field(
+        //             gqlTypes.name(field.name),
+        //             null,
+        //             null,
+        //             null,
+        //             gqlTypes.selectionSet([
+        //                 ...buildFragments(introspectionResults)(
+        //                     linkedType.possibleTypes || []
+        //                 ),
+        //                 ...buildFields(introspectionResults)(linkedType.fields),
+        //             ])
+        //         ),
+        //     ];
+        // }
 
         // NOTE: We might have to handle linked types which are not resources but will have to be careful about
         // ending with endless circular dependencies
