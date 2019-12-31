@@ -1,4 +1,13 @@
-import { GET_LIST, GET_MANY, GET_MANY_REFERENCE, DELETE, CREATE,UPDATE,UPDATE_MANY, DELETE_MANY} from './fetchActions';
+import {
+    GET_LIST,
+    GET_MANY,
+    GET_MANY_REFERENCE,
+    DELETE,
+    CREATE,
+    UPDATE,
+    UPDATE_MANY,
+    DELETE_MANY,
+} from './fetchActions';
 
 import { TypeKind } from 'graphql';
 import * as gqlTypes from 'graphql-ast-types-browser';
@@ -38,9 +47,9 @@ export const buildFields = introspectionResults => fields =>
             return [...acc, gqlTypes.field(gqlTypes.name(field.name))];
         }
 
-        const linkedResource = introspectionResults.resources.find(
-            r => r.type.name === type.name
-        );
+        // const linkedResource = introspectionResults.resources.find(
+        //     r => r.type.name === type.name
+        // );
 
         // if (linkedResource) {
         //     return [
@@ -111,7 +120,6 @@ export const getArgType = arg => {
 };
 
 export const buildArgs = (query, variables) => {
-
     if (query.args.length === 0) {
         return [];
     }
@@ -194,12 +202,12 @@ export default introspectionResults => (
                         null,
                         gqlTypes.selectionSet([
                             gqlTypes.field(
-                                gqlTypes.name("aggregate"),
+                                gqlTypes.name('aggregate'),
                                 null,
                                 null,
                                 null,
                                 gqlTypes.selectionSet([
-                                    gqlTypes.field(gqlTypes.name('count'))
+                                    gqlTypes.field(gqlTypes.name('count')),
                                 ])
                             ),
                         ])
@@ -211,23 +219,25 @@ export default introspectionResults => (
         ]);
     }
 
-    if (aorFetchType === CREATE ||
+    if (
+        aorFetchType === CREATE ||
         aorFetchType === UPDATE ||
         aorFetchType === UPDATE_MANY ||
         aorFetchType === DELETE ||
-        aorFetchType === DELETE_MANY ) {
+        aorFetchType === DELETE_MANY
+    ) {
         return gqlTypes.document([
             gqlTypes.operationDefinition(
                 'mutation',
                 gqlTypes.selectionSet([
                     gqlTypes.field(
                         gqlTypes.name(queryType.name),
-                        gqlTypes.name("data"),
+                        gqlTypes.name('data'),
                         args,
                         null,
                         gqlTypes.selectionSet([
                             gqlTypes.field(
-                                gqlTypes.name("returning"),
+                                gqlTypes.name('returning'),
                                 null,
                                 null,
                                 null,

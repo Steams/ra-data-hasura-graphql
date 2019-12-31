@@ -21,7 +21,8 @@
         "react-admin",
         "admin-on-rest",
         "rest",
-        "graphql"
+        "graphql",
+        "hasura"
     ],
     "license": "MIT",
     "scripts": {
@@ -29,19 +30,8 @@
     },
     "dependencies": {
         "graphql-ast-types-browser": "~1.0.2",
-        "graphql-tag": "^2.10.1",
-        "lodash": "~4.17.5",
-        "ra-core": "^3.1.1",
         "ra-data-graphql": "^3.0.2",
-        "react": "^16.12.0",
-        "react-admin": "^3.1.1",
-        "react-dom": "^16.12.0",
-        "react-final-form": "^6.3.3",
-        "react-redux": "^7.1.3",
-        "react-router": "^5.1.2",
-        "react-router-dom": "^5.1.2",
-        "redux": "^4.0.5",
-        "redux-saga": "^1.1.3"
+        "lodash": "~4.17.5"
     },
     "peerDependencies": {
         "graphql": "^14.1.1",
