@@ -1,9 +1,6 @@
 import { GET_LIST, GET_MANY, GET_MANY_REFERENCE } from './fetchActions';
 
-import { TypeKind } from 'graphql';
-import getFinalType from './getFinalType';
-
-const sanitizeResource = data => {
+const sanitizeResource = (data = {}) => {
     const result = Object.keys(data).reduce((acc, key) => {
         if (key.startsWith('_')) {
             return acc;
@@ -71,5 +68,7 @@ export default introspectionResults => (aorFetchType, resource) => res => {
         case DELETE_MANY:
             return {data: response.data.returning.map( x => x.id),};
 
+        default:
+            throw Error('Expected a propper fetchType, got: ', aorFetchType);
     }
 };
