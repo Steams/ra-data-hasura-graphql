@@ -1,4 +1,14 @@
-import { GET_ONE, GET_LIST, GET_MANY, GET_MANY_REFERENCE, DELETE, CREATE,UPDATE,UPDATE_MANY, DELETE_MANY} from './fetchActions';
+import {
+    GET_LIST,
+    GET_MANY,
+    GET_MANY_REFERENCE,
+    GET_ONE,
+    CREATE,
+    UPDATE,
+    DELETE,
+    UPDATE_MANY,
+    DELETE_MANY,
+} from './fetchActions';
 
 import { TypeKind } from 'graphql';
 import getFinalType from './getFinalType';
@@ -44,11 +54,9 @@ const sanitizeResource = data => {
 };
 
 export default introspectionResults => (aorFetchType, resource) => res => {
-
     const response = res.data;
 
     switch (aorFetchType) {
-
         case GET_MANY_REFERENCE:
         case GET_LIST:
             return {
@@ -57,10 +65,10 @@ export default introspectionResults => (aorFetchType, resource) => res => {
             };
 
         case GET_MANY:
-            return {data: response.items.map(sanitizeResource),};
+            return { data: response.items.map(sanitizeResource) };
 
         case GET_ONE:
-            return {data: sanitizeResource(response.returning[0])};
+            return { data: sanitizeResource(response.returning[0]) };
 
         case CREATE:
         case UPDATE:
@@ -69,7 +77,7 @@ export default introspectionResults => (aorFetchType, resource) => res => {
 
         case UPDATE_MANY:
         case DELETE_MANY:
-            return {data: response.data.returning.map( x => x.id),};
+            return { data: response.data.returning.map(x => x.id) };
 
     }
 };

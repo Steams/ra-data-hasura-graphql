@@ -1,4 +1,14 @@
-import { GET_ONE, GET_LIST, GET_MANY, GET_MANY_REFERENCE, DELETE, CREATE,UPDATE,UPDATE_MANY, DELETE_MANY} from './fetchActions';
+import {
+    GET_ONE,
+    GET_LIST,
+    GET_MANY,
+    GET_MANY_REFERENCE,
+    DELETE,
+    CREATE,
+    UPDATE,
+    UPDATE_MANY,
+    DELETE_MANY,
+} from './fetchActions';
 
 const buildGetListVariables = introspectionResults => (
     resource,
@@ -9,15 +19,14 @@ const buildGetListVariables = introspectionResults => (
 
     if (params.filter) {
         const filters = Object.keys(params.filter).reduce((acc, key) => {
-
             if (key === 'ids') {
                 return [
                     ...acc,
                     {
-                        'id': {
-                            '_in': params.filter['ids']
-                        }
-                    }
+                        id: {
+                            _in: params.filter['ids'],
+                        },
+                    },
                 ];
             }
 
@@ -82,35 +91,37 @@ const buildGetListVariables = introspectionResults => (
             //     }
             // }
 
-            return [...acc, {
-                [key]: {
-                    '_eq': params.filter[key]
-                }
-            }];
+            return [
+                ...acc,
+                {
+                    [key]: {
+                        _eq: params.filter[key],
+                    },
+                },
+            ];
         }, []);
 
-        result['where'] = {"_and": filters};
+        result['where'] = { _and: filters };
     }
-
 
     if (params.pagination) {
         result['limit'] = parseInt(params.pagination.perPage, 10);
-        result['offset'] = parseInt((params.pagination.page - 1) * params.pagination.perPage, 10);
+        result['offset'] = parseInt(
+            (params.pagination.page - 1) * params.pagination.perPage,
+            10
+        );
     }
 
     if (params.sort) {
-        result['order_by'] = {[params.sort.field]: params.sort.order.toLowerCase()};
+        result['order_by'] = {
+            [params.sort.field]: params.sort.order.toLowerCase(),
+        };
     }
 
     return result;
 };
 
-const buildUpdateVariables = (
-    resource,
-    aorFetchType,
-    params,
-    queryType
-) =>
+const buildUpdateVariables = (resource, aorFetchType, params, queryType) =>
     Object.keys(params.data).reduce((acc, key) => {
 
         // if (Array.isArray(params.data[key])) {
@@ -146,49 +157,41 @@ const buildUpdateVariables = (
         };
     }, {});
 
-const buildCreateVariables = (
-    resource,
-    aorFetchType,
-    params,
-    queryType
-) => {
+const buildCreateVariables = (resource, aorFetchType, params, queryType) => {
+    return Object.keys(params.data).reduce((acc, key) => {
+        // if (Array.isArray(params.data[key])) {
+        //     const arg = queryType.args.find(a => a.name === `${key}Ids`);
+        //     // if the field value is an array
+        //     // find an argument that takes that array whose name is "propertyids"
+        //     // ie if ur updating a user who has posts, they would have a postIDS property
+        //     // NOTE in hasura, it would not be called ..ids, it would be "todos_arr_rel_insert_input" etc
+        //     // TODO check how hasura handles updating references
 
-      return Object.keys(params.data).reduce((acc, key) => {
-          // if (Array.isArray(params.data[key])) {
-          //     const arg = queryType.args.find(a => a.name === `${key}Ids`);
-          //     // if the field value is an array
-          //     // find an argument that takes that array whose name is "propertyids"
-          //     // ie if ur updating a user who has posts, they would have a postIDS property
-          //     // NOTE in hasura, it would not be called ..ids, it would be "todos_arr_rel_insert_input" etc
-          //     // TODO check how hasura handles updating references
+        //     if (arg) {
+        //         return {
+        //             ...acc,
+        //             [`${key}Ids`]: params.data[key].map(({ id }) => id),
+        //         };
+        //     }
+        // }
 
-          //     if (arg) {
-          //         return {
-          //             ...acc,
-          //             [`${key}Ids`]: params.data[key].map(({ id }) => id),
-          //         };
-          //     }
-          // }
+        // if (typeof params.data[key] === 'object') {
+        //     const arg = true
 
-          // if (typeof params.data[key] === 'object') {
-          //     const arg = true
+        //     if (arg) {
+        //         return {
+        //             ...acc,
+        //             [`${key}_id`]: params.data[key].id,
+        //         };
+        //     }
+        // }
 
-
-          //     if (arg) {
-          //         return {
-          //             ...acc,
-          //             [`${key}_id`]: params.data[key].id,
-          //         };
-          //     }
-          // }
-
-          return {
-              ...acc,
-              [key]: params.data[key],
-          };
-      }, {});
-}
-
+        return {
+            ...acc,
+            [key]: params.data[key],
+        };
+    }, {});
+};
 
 export default introspectionResults => (
     resource,
@@ -204,64 +207,77 @@ export default introspectionResults => (
                 params,
                 queryType
             );
-        case GET_MANY_REFERENCE:{
-            var built = buildGetListVariables(introspectionResults)(resource, aorFetchType, params, queryType);
+        case GET_MANY_REFERENCE: {
+            var built = buildGetListVariables(introspectionResults)(
+                resource,
+                aorFetchType,
+                params,
+                queryType
+            );
             if (params.filter) {
                 return {
                     ...built,
                     where: {
-                        _and: [ ...built['where']['_and'], { [params.target]: { _eq: params.id } } ]
-                    }
+                        _and: [
+                            ...built['where']['_and'],
+                            { [params.target]: { _eq: params.id } },
+                        ],
+                    },
                 };
             }
             return {
                 ...built,
                 where: {
-                    [params.target]: { _eq: params.id }
-                }
+                    [params.target]: { _eq: params.id },
+                },
             };
         }
         case GET_MANY:
         case DELETE_MANY:
             return {
-                where: {"id": {"_in": params.ids}},
+                where: { id: { _in: params.ids } },
             };
 
         case GET_ONE:
             return {
-                where: {"id": {"_eq": params.id}},
-                limit: 1
+                where: { id: { _eq: params.id } },
+                limit: 1,
             };
 
         case DELETE:
             return {
-                where: {"id": {"_eq": params.id}}
+                where: { id: { _eq: params.id } },
             };
         case CREATE:
             return {
-                objects : buildCreateVariables(resource, aorFetchType, params, queryType)
+                objects: buildCreateVariables(
+                    resource,
+                    aorFetchType,
+                    params,
+                    queryType
+                ),
             };
 
         case UPDATE:
             return {
-                '_set' : buildUpdateVariables(
+                _set: buildUpdateVariables(
                     resource,
                     aorFetchType,
                     params,
                     queryType
                 ),
-                where: {"id": {"_eq": params.id}}
+                where: { id: { _eq: params.id } },
             };
 
         case UPDATE_MANY:
             return {
-                '_set' : buildUpdateVariables(
+                _set: buildUpdateVariables(
                     resource,
                     aorFetchType,
                     params,
                     queryType
                 ),
-                where: {"id": {"_in": params.ids}},
+                where: { id: { _in: params.ids } },
             };
     }
 };

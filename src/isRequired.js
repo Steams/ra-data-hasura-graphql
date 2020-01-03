@@ -8,5 +8,4 @@ const isRequired = type => {
     return type.kind === TypeKind.NON_NULL;
 };
 
-
 export default isRequired;
