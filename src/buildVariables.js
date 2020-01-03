@@ -123,7 +123,16 @@ const buildGetListVariables = introspectionResults => (
 
 const buildUpdateVariables = (resource, aorFetchType, params, queryType) =>
     Object.keys(params.data).reduce((acc, key) => {
+        // If hasura permissions do not allow a field to be updated like (id),
+        // we are not allowed to put it inside the variables
+        // RA passes the whole previous Object here
+        // https://github.com/marmelab/react-admin/issues/2414#issuecomment-428945402
 
+        // TODO: To overcome this permission issue,
+        // it would be better to allow only permitted inputFields from *_set_input INPUT_OBJECT
+        if (params.data[key] === params.previousData[key]) {
+            return acc;
+        }
         // if (Array.isArray(params.data[key])) {
 
         //     // find mutation arg with propertyIds?
