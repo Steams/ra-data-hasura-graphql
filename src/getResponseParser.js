@@ -1,4 +1,4 @@
-import { GET_LIST, GET_MANY, GET_MANY_REFERENCE } from './fetchActions';
+import { GET_ONE, GET_LIST, GET_MANY, GET_MANY_REFERENCE, DELETE, CREATE,UPDATE,UPDATE_MANY, DELETE_MANY} from './fetchActions';
 
 import { TypeKind } from 'graphql';
 import getFinalType from './getFinalType';
