@@ -144,6 +144,41 @@ export const buildArgs = (query, variables) => {
     return args;
 };
 
+export const buildMetaArgs = (query, variables,aorFetchType) => {
+    if (query.args.length === 0) {
+        return [];
+    }
+
+    const validVariables = Object.keys(variables).filter(
+        k => {
+            if(
+                aorFetchType === GET_LIST ||
+                aorFetchType === GET_MANY ||
+                aorFetchType === GET_MANY_REFERENCE
+            ) {
+                return (typeof variables[k] !== 'undefined' && k !== 'limit');
+            }
+
+            return typeof variables[k] !== 'undefined';
+        }
+    );
+
+    let args = query.args
+        .filter(a => validVariables.includes(a.name))
+        .reduce(
+            (acc, arg) => [
+                ...acc,
+                gqlTypes.argument(
+                    gqlTypes.name(arg.name),
+                    gqlTypes.variable(gqlTypes.name(arg.name))
+                ),
+            ],
+            []
+        );
+
+    return args;
+};
+
 export const buildApolloArgs = (query, variables) => {
     if (query.args.length === 0) {
         return [];
@@ -177,7 +212,7 @@ export default introspectionResults => (
     const { sortField, sortOrder, ...metaVariables } = variables;
     const apolloArgs = buildApolloArgs(queryType, variables);
     const args = buildArgs(queryType, variables);
-    const metaArgs = buildArgs(queryType, metaVariables);
+    const metaArgs = buildMetaArgs(queryType, metaVariables, aorFetchType);
     const fields = buildFields(introspectionResults)(resource.type.fields);
     if (
         aorFetchType === GET_LIST ||
