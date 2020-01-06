@@ -10,6 +10,8 @@ import {
     DELETE_MANY,
 } from './fetchActions';
 
+import getFinalType from './getFinalType';
+
 const buildGetListVariables = introspectionResults => (
     resource,
     aorFetchType,
@@ -30,14 +32,31 @@ const buildGetListVariables = introspectionResults => (
                 ];
             }
 
-            return [
-                ...acc,
-                {
-                    [key]: {
-                        _ilike: "%" + params.filter[key] + "%",
+            const field = resource.type.fields.find(f => f.name === key)
+
+            console.log('field')
+            console.log(field)
+
+            switch (getFinalType(field.type).name) {
+            case "String":
+                return [
+                    ...acc,
+                    {
+                        [key]: {
+                            _ilike: "%" + params.filter[key] + "%"
+                        },
                     },
-                },
-            ];
+                ];
+            default :
+                return [
+                    ...acc,
+                    {
+                        [key]: {
+                            _eq: params.filter[key]
+                        },
+                    },
+                ];
+            }
         }, []);
 
         result['where'] = { _and: filters };

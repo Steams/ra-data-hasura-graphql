@@ -47,47 +47,6 @@ export const buildFields = introspectionResults => fields =>
             return [...acc, gqlTypes.field(gqlTypes.name(field.name))];
         }
 
-        // const linkedResource = introspectionResults.resources.find(
-        //     r => r.type.name === type.name
-        // );
-
-        // if (linkedResource) {
-        //     return [
-        //         ...acc,
-        //         gqlTypes.field(
-        //             gqlTypes.name(field.name),
-        //             null,
-        //             null,
-        //             null,
-        //             gqlTypes.selectionSet([gqlTypes.field(gqlTypes.name('id'))])
-        //         ),
-        //     ];
-        // }
-
-        // const linkedType = introspectionResults.types.find(
-        //     t => t.name === type.name
-        // );
-
-        // if (linkedType) {
-        //     return [
-        //         ...acc,
-        //         gqlTypes.field(
-        //             gqlTypes.name(field.name),
-        //             null,
-        //             null,
-        //             null,
-        //             gqlTypes.selectionSet([
-        //                 ...buildFragments(introspectionResults)(
-        //                     linkedType.possibleTypes || []
-        //                 ),
-        //                 ...buildFields(introspectionResults)(linkedType.fields),
-        //             ])
-        //         ),
-        //     ];
-        // }
-
-        // NOTE: We might have to handle linked types which are not resources but will have to be careful about
-        // ending with endless circular dependencies
         return acc;
     }, []);
 
