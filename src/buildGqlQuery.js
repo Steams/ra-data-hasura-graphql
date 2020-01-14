@@ -115,7 +115,11 @@ export const buildMetaArgs = (query, variables,aorFetchType) => {
                 aorFetchType === GET_MANY ||
                 aorFetchType === GET_MANY_REFERENCE
             ) {
-                return (typeof variables[k] !== 'undefined' && k !== 'limit');
+                return (
+                    typeof variables[k] !== 'undefined' && 
+                    k !== 'limit' && 
+                    k !== 'offset'
+                );
             }
 
             return typeof variables[k] !== 'undefined';
