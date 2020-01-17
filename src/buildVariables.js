@@ -32,30 +32,27 @@ const buildGetListVariables = introspectionResults => (
                 ];
             }
 
-            const field = resource.type.fields.find(f => f.name === key)
-
-            console.log('field')
-            console.log(field)
+            const field = resource.type.fields.find(f => f.name === key);
 
             switch (getFinalType(field.type).name) {
-            case "String":
-                return [
-                    ...acc,
-                    {
-                        [key]: {
-                            _ilike: "%" + params.filter[key] + "%"
+                case 'String':
+                    return [
+                        ...acc,
+                        {
+                            [key]: {
+                                _ilike: '%' + params.filter[key] + '%',
+                            },
                         },
-                    },
-                ];
-            default :
-                return [
-                    ...acc,
-                    {
-                        [key]: {
-                            _eq: params.filter[key]
+                    ];
+                default:
+                    return [
+                        ...acc,
+                        {
+                            [key]: {
+                                _eq: params.filter[key],
+                            },
                         },
-                    },
-                ];
+                    ];
             }
         }, []);
 
@@ -104,12 +101,7 @@ const buildUpdateVariables = (resource, aorFetchType, params, queryType) =>
     }, {});
 
 const buildCreateVariables = (resource, aorFetchType, params, queryType) => {
-    return Object.keys(params.data).reduce((acc, key) => {
-        return {
-            ...acc,
-            [key]: params.data[key],
-        };
-    }, {});
+    return params.data;
 };
 
 export default introspectionResults => (
