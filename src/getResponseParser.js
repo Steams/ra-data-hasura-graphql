@@ -23,11 +23,19 @@ const sanitizeResource = (data = {}) => {
         }
         if (Array.isArray(dataKey)) {
             if (typeof dataKey[0] === 'object') {
-                return {
-                    ...acc,
-                    [key]: dataKey.map(sanitizeResource),
-                    [`${key}Ids`]: dataKey.map(d => d.id),
-                };
+                 // if var is an array of reference objects with id properties
+                if (dataKey[0].id != null) {
+                    return {
+                        ...acc,
+                        [key]: dataKey.map(sanitizeResource),
+                        [`${key}Ids`]: dataKey.map(d => d.id),
+                    };
+                } else {
+                    return {
+                        ...acc,
+                        [key]: dataKey.map(sanitizeResource),
+                    };
+                }
             } else {
                 return { ...acc, [key]: dataKey };
             }
