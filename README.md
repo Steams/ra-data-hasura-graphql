@@ -1,14 +1,16 @@
 # ra-data-hasura-graphql
 
-A GraphQL data provider for react-admin tailored to target Hasura GraphQL endpoints.
+A GraphQL data provider for [react-admin](https://marmelab.com/react-admin) tailored to target [Hasura](https://hasura.io/) GraphQL endpoints.
 
 - [Installation](#installation)
 - [Usage](#installation)
 - [Options](#options)
 
+Example application demonstrating usage: [react-admin-low-code](https://github.com/cpursley/react-admin-low-code)
+
 ## Benifits and Motivation
 
-This utility is built on top of ra-data-graphql and is a custom data provider for the current Hasura graphql API format.
+This utility is built on top of [ra-data-graphql](https://github.com/vladimiregorov/react-admin/blob/master/packages/ra-data-graphql/README.md) and is a custom data provider for the current Hasura graphql API format.
 
 The existing ra-data-hasura provider communicates with Hasura V1, using standard REST and not GraphQL. The existing ra-data-graphql-simple provider, requires that your graphql endpoint implement a specific grammar for the objects and methods exposed, which is not an option available if you intend to use a Hasura API because the exposed objects and methods are generated to match their own specification.
 
