@@ -23,7 +23,7 @@ const sanitizeResource = (data = {}) => {
         }
         if (Array.isArray(dataKey)) {
             if (typeof dataKey[0] === 'object') {
-                 // if var is an array of reference objects with id properties
+                // if var is an array of reference objects with id properties
                 if (dataKey[0].id != null) {
                     return {
                         ...acc,

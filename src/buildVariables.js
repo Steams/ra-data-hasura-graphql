@@ -89,7 +89,7 @@ const buildUpdateVariables = (resource, aorFetchType, params, queryType) =>
             return acc;
         }
 
-        if (resource.type.fields.some( f => f.name === key )) {
+        if (resource.type.fields.some(f => f.name === key)) {
             return {
                 ...acc,
                 [key]: params.data[key],
@@ -97,7 +97,6 @@ const buildUpdateVariables = (resource, aorFetchType, params, queryType) =>
         }
 
         return acc;
-
     }, {});
 
 const buildCreateVariables = (resource, aorFetchType, params, queryType) => {

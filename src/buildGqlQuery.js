@@ -103,28 +103,26 @@ export const buildArgs = (query, variables) => {
     return args;
 };
 
-export const buildMetaArgs = (query, variables,aorFetchType) => {
+export const buildMetaArgs = (query, variables, aorFetchType) => {
     if (query.args.length === 0) {
         return [];
     }
 
-    const validVariables = Object.keys(variables).filter(
-        k => {
-            if(
-                aorFetchType === GET_LIST ||
-                aorFetchType === GET_MANY ||
-                aorFetchType === GET_MANY_REFERENCE
-            ) {
-                return (
-                    typeof variables[k] !== 'undefined' && 
-                    k !== 'limit' && 
-                    k !== 'offset'
-                );
-            }
-
-            return typeof variables[k] !== 'undefined';
+    const validVariables = Object.keys(variables).filter(k => {
+        if (
+            aorFetchType === GET_LIST ||
+            aorFetchType === GET_MANY ||
+            aorFetchType === GET_MANY_REFERENCE
+        ) {
+            return (
+                typeof variables[k] !== 'undefined' &&
+                k !== 'limit' &&
+                k !== 'offset'
+            );
         }
-    );
+
+        return typeof variables[k] !== 'undefined';
+    });
 
     let args = query.args
         .filter(a => validVariables.includes(a.name))

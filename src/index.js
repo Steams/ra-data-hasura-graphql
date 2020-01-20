@@ -18,15 +18,15 @@ const defaultOptions = {
     buildQuery,
     introspection: {
         operationNames: {
-            [GET_LIST]:           resource => `${resource.name}`,
-            [GET_ONE]:            resource => `${resource.name}`,
-            [GET_MANY]:           resource => `${resource.name}`,
+            [GET_LIST]: resource => `${resource.name}`,
+            [GET_ONE]: resource => `${resource.name}`,
+            [GET_MANY]: resource => `${resource.name}`,
             [GET_MANY_REFERENCE]: resource => `${resource.name}`,
-            [CREATE]:             resource => `insert_${resource.name}`,
-            [UPDATE]:             resource => `update_${resource.name}`,
-            [UPDATE_MANY]:        resource => `update_${resource.name}`,
-            [DELETE]:             resource => `delete_${resource.name}`,
-            [DELETE_MANY]:        resource => `delete_${resource.name}`,
+            [CREATE]: resource => `insert_${resource.name}`,
+            [UPDATE]: resource => `update_${resource.name}`,
+            [UPDATE_MANY]: resource => `update_${resource.name}`,
+            [DELETE]: resource => `delete_${resource.name}`,
+            [DELETE_MANY]: resource => `delete_${resource.name}`,
         },
     },
 };
