@@ -17,47 +17,28 @@ const buildGetListVariables = introspectionResults => (
     aorFetchType,
     params
 ) => {
-    var result = {};
+    const result = {};
+    const { filter: filterObj = {}, customFilters = [] } = params;
 
-    if (params.filter) {
-        const filters = Object.keys(params.filter).reduce((acc, key) => {
-            if (key === 'ids') {
-                return [
-                    ...acc,
-                    {
-                        id: {
-                            _in: params.filter['ids'],
-                        },
-                    },
-                ];
-            }
-
+    const filters = Object.keys(filterObj).reduce((acc, key) => {
+        let filter;
+        if (key === 'ids') {
+            filter = { id: { _in: filterObj['ids'] } };
+        } else {
             const field = resource.type.fields.find(f => f.name === key);
-
             switch (getFinalType(field.type).name) {
                 case 'String':
-                    return [
-                        ...acc,
-                        {
-                            [key]: {
-                                _ilike: '%' + params.filter[key] + '%',
-                            },
-                        },
-                    ];
+                    filter = { [key]: { _ilike: '%' + filterObj[key] + '%' } };
+                    break;
                 default:
-                    return [
-                        ...acc,
-                        {
-                            [key]: {
-                                _eq: params.filter[key],
-                            },
-                        },
-                    ];
+                    filter = { [key]: { _eq: filterObj[key] } };
             }
-        }, []);
+        }
 
-        result['where'] = { _and: filters };
-    }
+        return [...acc, filter];
+    }, customFilters);
+
+    result['where'] = { _and: filters };
 
     if (params.pagination) {
         result['limit'] = parseInt(params.pagination.perPage, 10);
