@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
     GET_ONE,
     GET_LIST,
@@ -49,9 +50,7 @@ const buildGetListVariables = introspectionResults => (
     }
 
     if (params.sort) {
-        result['order_by'] = {
-            [params.sort.field]: params.sort.order.toLowerCase(),
-        };
+        result['order_by'] = _.set({}, params.sort.field, params.sort.order.toLowerCase());
     }
 
     return result;
