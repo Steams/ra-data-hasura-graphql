@@ -66,7 +66,10 @@ const buildUpdateVariables = (resource, aorFetchType, params, queryType) =>
 
         // TODO: To overcome this permission issue,
         // it would be better to allow only permitted inputFields from *_set_input INPUT_OBJECT
-        if (params.data[key] === params.previousData[key]) {
+        if (
+            params.previousData &&
+            params.data[key] === params.previousData[key]
+        ) {
             return acc;
         }
 
