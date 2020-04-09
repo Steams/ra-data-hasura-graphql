@@ -24,10 +24,9 @@ const buildGetListVariables = introspectionResults => (
         let filter;
         if (key === 'ids') {
             filter = { id: { _in: filterObj['ids'] } };
-        
-	} else if(Array.isArray(filterObj[key])) {
-		filter = { [key]: { _in: filterObj[key] } };
-	} else {
+        } else if (Array.isArray(filterObj[key])) {
+		    filter = { [key]: { _in: filterObj[key] } };
+        } else {
             const field = resource.type.fields.find(f => f.name === key);
             switch (getFinalType(field.type).name) {
                 case 'String':
