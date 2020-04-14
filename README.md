@@ -110,6 +110,29 @@ And generates the following variables to be passed along side the query:
 
 ```
 
+### Sorting
+
+Dot notation is supported for sort fields, and will be expanded into an object in the graphQL query.
+
+For example:
+```
+export const PostList = (props) => (
+    <List {...props} sort={{ field: 'user.email', order: 'DESC' }}>
+        ...
+    </List>
+);
+```
+
+Will generate the following graphQL query:
+```
+{
+  limit: 25,
+  offset: 0,
+  order_by: { user: { email: 'desc' } }
+}
+```
+
+
 ## Options
 
 ### Customize the Apollo client
