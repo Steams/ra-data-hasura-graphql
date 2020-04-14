@@ -35,7 +35,7 @@ export const buildFragments = introspectionResults => possibleTypes =>
         ];
     }, []);
 
-export const buildFields = introspectionResults => fields =>
+export const buildFields = fields =>
     fields.reduce((acc, field) => {
         const type = getFinalType(field.type);
 
@@ -174,7 +174,7 @@ export default introspectionResults => (
     const apolloArgs = buildApolloArgs(queryType, variables);
     const args = buildArgs(queryType, variables);
     const metaArgs = buildMetaArgs(queryType, metaVariables, aorFetchType);
-    const fields = buildFields(introspectionResults)(resource.type.fields);
+    const fields = buildFields(resource.type.fields);
     if (
         aorFetchType === GET_LIST ||
         aorFetchType === GET_MANY ||
