@@ -28,15 +28,15 @@ export const buildFragments = introspectionResults => possibleTypes =>
             ...acc,
             gqlTypes.inlineFragment(
                 gqlTypes.selectionSet(
-                    buildFields(introspectionResults)(linkedType.fields)
+                    buildFields(linkedType)
                 ),
                 gqlTypes.namedType(gqlTypes.name(type.name))
             ),
         ];
     }, []);
 
-export const buildFields = fields =>
-    fields.reduce((acc, field) => {
+export const buildFields = type =>
+    type.fields.reduce((acc, field) => {
         const type = getFinalType(field.type);
 
         if (type.name.startsWith('_')) {
@@ -164,17 +164,17 @@ export const buildApolloArgs = (query, variables) => {
     return args;
 };
 
-export default introspectionResults => (
+export const buildGqlQuery = (introspectionResults, buildFields, buildMetaArgs, buildArgs, buildApolloArgs) => (
     resource,
     aorFetchType,
     queryType,
-    variables
+    variables,
 ) => {
     const { sortField, sortOrder, ...metaVariables } = variables;
     const apolloArgs = buildApolloArgs(queryType, variables);
     const args = buildArgs(queryType, variables);
     const metaArgs = buildMetaArgs(queryType, metaVariables, aorFetchType);
-    const fields = buildFields(resource.type.fields);
+    const fields = buildFields(resource.type);
     if (
         aorFetchType === GET_LIST ||
         aorFetchType === GET_MANY ||
@@ -265,3 +265,5 @@ export default introspectionResults => (
         ),
     ]);
 };
+
+export default introspectionResults => buildGqlQuery(introspectionResults, buildFields, buildMetaArgs, buildArgs, buildApolloArgs)
