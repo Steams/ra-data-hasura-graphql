@@ -15,11 +15,17 @@ export const buildQueryFactory = (
         );
 
         if (!resource) {
+          if (knownResources.length) {
             throw new Error(
                 `Unknown resource ${resourceName}. Make sure it has been declared on your server side schema. Known resources are ${knownResources.join(
                     ', '
                 )}`
             );
+          } else {
+            throw new Error(
+                `Unknown resource ${resourceName}. No resources were found. Make sure it has been declared on your server side schema and check if your Authorization header is properly set up.`
+            );
+          }
         }
 
         const queryType = resource[aorFetchType];
