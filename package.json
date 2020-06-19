@@ -30,10 +30,10 @@
     },
     "dependencies": {
         "graphql-ast-types-browser": "~1.0.2",
-        "ra-data-graphql": "^3.0.2",
+        "kind-of": ">=6.0.3",
         "lodash": "~4.17.5",
         "minimist": ">=1.2.3",
-        "kind-of": ">=6.0.3"
+        "ra-data-graphql": "^3.6.1"
     },
     "peerDependencies": {
         "graphql": "^14.1.1",
