@@ -132,6 +132,26 @@ Will generate the following graphQL query:
 }
 ```
 
+### Authentication
+
+To send authentication headers, declare your own apollo client.
+
+```
+import ApolloClient from 'apollo-boost';
+
+const client = new ApolloClient({
+  uri: 'http://localhost:8080/v1/graphql',
+  headers: {
+    'x-hasura-admin-secret': `myadminsecretkey`,
+    // 'Authorization': `Bearer xxxx`,
+  }
+});
+
+// When building your provider inside your component
+// set up the client like this
+buildHasuraProvider({ client })
+```
+
 
 ## Options
 

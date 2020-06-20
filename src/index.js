@@ -12,7 +12,9 @@ import {
     DELETE_MANY,
 } from './fetchActions';
 import buildQuery from './buildQuery';
-export { buildQuery };
+import buildGqlQuery from './buildGqlQuery';
+
+export { buildQuery, buildGqlQuery };
 
 const defaultOptions = {
     buildQuery,

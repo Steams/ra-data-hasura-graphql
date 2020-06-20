@@ -1,6 +1,6 @@
 {
     "name": "ra-data-hasura-graphql",
-    "version": "0.1.10",
+    "version": "0.1.11",
     "description": "A data provider for connecting react-admin to a Hasura endpoint",
     "main": "dist/index.js",
     "sideEffects": false,
@@ -33,7 +33,7 @@
         "kind-of": ">=6.0.3",
         "lodash": "~4.17.5",
         "minimist": ">=1.2.3",
-        "ra-data-graphql": "^3.0.2"
+        "ra-data-graphql": "^3.6.1"
     },
     "peerDependencies": {
         "graphql": "^14.1.1",
