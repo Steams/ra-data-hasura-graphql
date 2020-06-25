@@ -61,11 +61,12 @@ const buildGetListVariables = introspectionResults => (
         } else if (Array.isArray(obj[key])) {
 		    filter = { [key]: { _in: obj[key] } };
         } else {
-            const [keyName, operation] = key.split('@')
+            let [keyName, operation = ''] = key.split('@')
             const field = resource.type.fields.find(f => f.name === keyName);
             switch (getFinalType(field.type).name) {
                 case 'String':
-                    filter = { [keyName]: { [ operation || '_ilike']: '%' + obj[key] + '%' } };
+                    operation = operation || '_ilike'
+                    filter = { [keyName]: { [operation]:  operation.includes('like') ? `%${obj[key]}%` :  obj[key]} };
                     break;
                 default:
                     filter = { [keyName]: { [ operation || '_eq']: obj[key] } };
