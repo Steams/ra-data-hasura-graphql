@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import set from 'lodash/set';
+import omit from 'lodash/omit'
 import {
     GET_ONE,
     GET_LIST,
@@ -19,29 +20,66 @@ const buildGetListVariables = introspectionResults => (
     params
 ) => {
     const result = {};
-    const { filter: filterObj = {}, customFilters = [] } = params;
+    let { filter: filterObj = {} } = params
+    const { customFilters = [] } = params;
 
-    const filters = Object.keys(filterObj).reduce((acc, key) => {
+     /**
+         keys with comma separated values
+        {
+            'title@ilike,body@like,authors@similar': 'test',
+            'col1@like,col2@like': 'val'
+        }
+     */
+    const orFilterKeys = Object.keys(filterObj).filter(e => e.includes(','))
+    /**
+        format filters
+        {
+            'title@ilike': 'test',
+            'body@like': 'test',
+            'authors@similar': 'test',
+            'col1@like': 'val',
+            'col2@like': 'val'
+        }
+    */
+    const orFilterObj = orFilterKeys.reduce((acc, commaSeparatedKey) => {
+        const keys = commaSeparatedKey.split(',')
+        return {
+            ...acc,
+            ...keys.reduce((acc2, key) => {
+                return {
+                    ...acc2,
+                    [key]: filterObj[commaSeparatedKey]
+                }
+            }, {})
+        }
+    }, {})
+    filterObj = omit(filterObj, orFilterKeys)
+    const filterReducer = (obj) => (acc, key) => {
         let filter;
         if (key === 'ids') {
-            filter = { id: { _in: filterObj['ids'] } };
-        } else if (Array.isArray(filterObj[key])) {
-		    filter = { [key]: { _in: filterObj[key] } };
+            filter = { id: { _in: obj['ids'] } };
+        } else if (Array.isArray(obj[key])) {
+		    filter = { [key]: { _in: obj[key] } };
+        } else if (obj[key] && obj[key].format === 'hasura-raw-query') {
+            filter = { [key]: obj[key].value || {} };
         } else {
-            const field = resource.type.fields.find(f => f.name === key);
+            let [keyName, operation = ''] = key.split('@')
+            const field = resource.type.fields.find(f => f.name === keyName);
             switch (getFinalType(field.type).name) {
                 case 'String':
-                    filter = { [key]: { _ilike: '%' + filterObj[key] + '%' } };
+                    operation = operation || '_ilike'
+                    filter = { [keyName]: { [operation]:  operation.includes('like') ? `%${obj[key]}%` :  obj[key]} };
                     break;
                 default:
-                    filter = { [key]: { _eq: filterObj[key] } };
+                    filter = { [keyName]: { [ operation || '_eq']: obj[key] } };
             }
         }
-
         return [...acc, filter];
-    }, customFilters);
+    }
+    const andFilters = Object.keys(filterObj).reduce(filterReducer(filterObj), customFilters);
+    const orFilters = Object.keys(orFilterObj).reduce(filterReducer(orFilterObj), []);
 
-    result['where'] = { _and: filters };
+    result['where'] = { _and: andFilters, ...orFilters.length && { _or: orFilters } };
 
     if (params.pagination) {
         result['limit'] = parseInt(params.pagination.perPage, 10);
@@ -52,7 +90,7 @@ const buildGetListVariables = introspectionResults => (
     }
 
     if (params.sort) {
-        result['order_by'] = _.set({}, params.sort.field, params.sort.order.toLowerCase());
+        result['order_by'] = set({}, params.sort.field, params.sort.order.toLowerCase());
     }
 
     return result;
