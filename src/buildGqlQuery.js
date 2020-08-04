@@ -37,9 +37,6 @@ export const buildFields = (type) =>
   type.fields.reduce((acc, field) => {
     const type = getFinalType(field.type);
 
-    if (type.name.startsWith('_')) {
-      return acc;
-    }
 
     if (type.kind !== TypeKind.OBJECT && type.kind !== TypeKind.INTERFACE) {
       return [...acc, gqlTypes.field(gqlTypes.name(field.name))];
