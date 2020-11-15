@@ -30,41 +30,37 @@ The `ra-data-hasura-graphql` package exposes a single function, which is a const
 
 ```jsx
 // in App.js
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import buildHasuraProvider from 'ra-data-hasura-graphql';
 import { Admin, Resource } from 'react-admin';
 
 import { PostCreate, PostEdit, PostList } from './posts';
 
-class App extends Component {
-    constructor() {
-        super();
-        this.state = { dataProvider: null };
-    }
-    componentDidMount() {
-        buildHasuraProvider({
-            clientOptions: { uri: 'http://localhost:4000' },
-        }).then((dataProvider) => this.setState({ dataProvider }));
-    }
+const App = () => {
+  const [dataProvider, setDataProvider] = useState(null);
 
-    render() {
-        const { dataProvider } = this.state;
-
-        if (!dataProvider) {
-            return <div>Loading</div>;
-        }
-
-        return (
-            <Admin dataProvider={dataProvider}>
-                <Resource
-                    name="Post"
-                    list={PostList}
-                    edit={PostEdit}
-                    create={PostCreate}
-                />
-            </Admin>
-        );
+  useEffect(() => {
+    const buildDataProvider = async () => {
+      const dataProvider = await buildHasuraProvider(
+        clientOptions: { uri: 'http://localhost:4000' },
+      );
+      setDataProvider(() => dataProvider);
     }
+    buildDataProvider();
+  }, [])
+
+  if (!dataProvider) return <p>Loading...</p>;
+
+  return (
+    <Admin dataProvider={dataProvider}>
+      <Resource
+        name="Post"
+        list={PostList}
+        edit={PostEdit}
+        create={PostCreate}
+      />
+    </Admin>
+  );
 }
 
 export default App;
