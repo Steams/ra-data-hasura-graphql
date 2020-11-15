@@ -23,7 +23,14 @@ import {
 } from './buildGqlQuery';
 import { buildQueryFactory } from './buildQuery';
 
-export { buildFields, buildMetaArgs, buildArgs, buildApolloArgs };
+export {
+    buildFields,
+    buildMetaArgs,
+    buildArgs,
+    buildApolloArgs,
+    defaultBuildVariables,
+    defaultGetResponseParser,
+};
 
 const defaultOptions = {
     introspection: {
@@ -48,7 +55,12 @@ const buildGqlQueryDefaults = {
     buildApolloArgs,
 };
 
-const buildCustomDataProvider = (options, buildGqlQueryOverrides = {}) => {
+const buildCustomDataProvider = (
+    options,
+    buildGqlQueryOverrides = {},
+    customBuildVariables = defaultBuildVariables,
+    customGetResponseParser = defaultGetResponseParser,
+) => {
     const buildGqlQueryOptions = {
         ...buildGqlQueryDefaults,
         ...buildGqlQueryOverrides,
@@ -64,9 +76,9 @@ const buildCustomDataProvider = (options, buildGqlQueryOverrides = {}) => {
         );
 
     const buildQuery = buildQueryFactory(
-        defaultBuildVariables,
+        customBuildVariables,
         customBuildGqlQuery,
-        defaultGetResponseParser
+        customGetResponseParser
     );
 
     return buildDataProvider(
