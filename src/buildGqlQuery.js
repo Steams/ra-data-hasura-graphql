@@ -174,7 +174,7 @@ export const buildGqlQuery = (introspectionResults, buildFields, buildMetaArgs, 
     const apolloArgs = buildApolloArgs(queryType, variables);
     const args = buildArgs(queryType, variables);
     const metaArgs = buildMetaArgs(queryType, metaVariables, aorFetchType);
-    const fields = buildFields(resource.type);
+    const fields = buildFields(resource.type, aorFetchType);
     if (
         aorFetchType === GET_LIST ||
         aorFetchType === GET_MANY ||
