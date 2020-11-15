@@ -11,34 +11,71 @@ import {
     UPDATE_MANY,
     DELETE_MANY,
 } from './fetchActions';
-import buildQuery from './buildQuery';
-import buildGqlQuery from './buildGqlQuery';
 
-export { buildQuery, buildGqlQuery };
+import defaultBuildVariables from './buildVariables';
+import defaultGetResponseParser from './getResponseParser';
+import {
+    buildGqlQuery,
+    buildFields,
+    buildMetaArgs,
+    buildArgs,
+    buildApolloArgs,
+} from './buildGqlQuery';
+import { buildQueryFactory } from './buildQuery';
+
+export { buildFields, buildMetaArgs, buildArgs, buildApolloArgs };
 
 const defaultOptions = {
-    buildQuery,
     introspection: {
         operationNames: {
-            [GET_LIST]: resource => `${resource.name}`,
-            [GET_ONE]: resource => `${resource.name}`,
-            [GET_MANY]: resource => `${resource.name}`,
-            [GET_MANY_REFERENCE]: resource => `${resource.name}`,
-            [CREATE]: resource => `insert_${resource.name}`,
-            [UPDATE]: resource => `update_${resource.name}`,
-            [UPDATE_MANY]: resource => `update_${resource.name}`,
-            [DELETE]: resource => `delete_${resource.name}`,
-            [DELETE_MANY]: resource => `delete_${resource.name}`,
+            [GET_LIST]: (resource) => `${resource.name}`,
+            [GET_ONE]: (resource) => `${resource.name}`,
+            [GET_MANY]: (resource) => `${resource.name}`,
+            [GET_MANY_REFERENCE]: (resource) => `${resource.name}`,
+            [CREATE]: (resource) => `insert_${resource.name}`,
+            [UPDATE]: (resource) => `update_${resource.name}`,
+            [UPDATE_MANY]: (resource) => `update_${resource.name}`,
+            [DELETE]: (resource) => `delete_${resource.name}`,
+            [DELETE_MANY]: (resource) => `delete_${resource.name}`,
         },
     },
 };
 
-export default options => {
-    return buildDataProvider(merge({}, defaultOptions, options)).then(
-        dataProvider => {
-            return (fetchType, resource, params) => {
-                return dataProvider(fetchType, resource, params);
-            };
-        }
-    );
+const buildGqlQueryDefaults = {
+    buildFields,
+    buildMetaArgs,
+    buildArgs,
+    buildApolloArgs,
 };
+
+const buildCustomDataProvider = (options, buildGqlQueryOverrides = {}) => {
+    const buildGqlQueryOptions = {
+        ...buildGqlQueryDefaults,
+        ...buildGqlQueryOverrides,
+    };
+
+    const customBuildGqlQuery = (introspectionResults) =>
+        buildGqlQuery(
+            introspectionResults,
+            buildGqlQueryOptions.buildFields,
+            buildGqlQueryOptions.buildMetaArgs,
+            buildGqlQueryOptions.buildArgs,
+            buildGqlQueryOptions.buildApolloArgs
+        );
+
+    const buildQuery = buildQueryFactory(
+        defaultBuildVariables,
+        customBuildGqlQuery,
+        defaultGetResponseParser
+    );
+
+    return buildDataProvider(
+        merge({}, defaultOptions, options, { buildQuery })
+    ).then((dataProvider) => {
+        return (fetchType, resource, params) => {
+            return dataProvider(fetchType, resource, params);
+        };
+    });
+};
+
+export default buildCustomDataProvider;
