@@ -10,38 +10,38 @@ export const DELETE_MANY = 'DELETE_MANY';
 
 export const fetchActionsWithRecordResponse = [GET_ONE, CREATE, UPDATE];
 export const fetchActionsWithArrayOfIdentifiedRecordsResponse = [
-    GET_LIST,
-    GET_MANY,
-    GET_MANY_REFERENCE,
+  GET_LIST,
+  GET_MANY,
+  GET_MANY_REFERENCE,
 ];
 export const fetchActionsWithArrayOfRecordsResponse = [
-    ...fetchActionsWithArrayOfIdentifiedRecordsResponse,
-    UPDATE_MANY,
-    DELETE_MANY,
+  ...fetchActionsWithArrayOfIdentifiedRecordsResponse,
+  UPDATE_MANY,
+  DELETE_MANY,
 ];
 export const fetchActionsWithTotalResponse = [GET_LIST, GET_MANY_REFERENCE];
 
-export const sanitizeFetchType = fetchType => {
-    switch (fetchType) {
-        case GET_LIST:
-            return 'getList';
-        case GET_ONE:
-            return 'getOne';
-        case GET_MANY:
-            return 'getMany';
-        case GET_MANY_REFERENCE:
-            return 'getManyReference';
-        case CREATE:
-            return 'create';
-        case UPDATE:
-            return 'update';
-        case UPDATE_MANY:
-            return 'updateMany';
-        case DELETE:
-            return 'delete';
-        case DELETE_MANY:
-            return 'deleteMany';
-        default:
-            return fetchType;
-    }
+export const sanitizeFetchType = (fetchType) => {
+  switch (fetchType) {
+    case GET_LIST:
+      return 'getList';
+    case GET_ONE:
+      return 'getOne';
+    case GET_MANY:
+      return 'getMany';
+    case GET_MANY_REFERENCE:
+      return 'getManyReference';
+    case CREATE:
+      return 'create';
+    case UPDATE:
+      return 'update';
+    case UPDATE_MANY:
+      return 'updateMany';
+    case DELETE:
+      return 'delete';
+    case DELETE_MANY:
+      return 'deleteMany';
+    default:
+      return fetchType;
+  }
 };
