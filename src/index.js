@@ -82,7 +82,7 @@ const buildCustomDataProvider = (
   );
 
   return buildDataProvider(
-    merge({}, defaultOptions, options, { buildQuery })
+    merge({}, defaultOptions, { buildQuery }, options)
   ).then((dataProvider) => {
     return (fetchType, resource, params) => {
       return dataProvider(fetchType, resource, params);
