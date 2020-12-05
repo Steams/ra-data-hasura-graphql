@@ -47,7 +47,6 @@ const buildGetListVariables = (introspectionResults) => (
       ...acc,
       ...keys.reduce((acc2, key) => {
         return {
-<<<<<<< HEAD
           ...acc2,
           [key]: filterObj[commaSeparatedKey],
         };
@@ -80,55 +79,6 @@ const buildGetListVariables = (introspectionResults) => (
         default:
           filter = { [keyName]: { [operation || '_eq']: obj[key] } };
       }
-=======
-            ...acc,
-            ...keys.reduce((acc2, key) => {
-                return {
-                    ...acc2,
-                    [key]: filterObj[commaSeparatedKey]
-                }
-            }, {})
-        }
-    }, {})
-    filterObj = omit(filterObj, orFilterKeys)
-    const filterReducer = (obj) => (acc, key) => {
-        let filter;
-        if (key === 'ids') {
-            filter = { id: { _in: obj['ids'] } };
-        } else if (obj[key] && obj[key].format === 'hasura-raw-query') {
-            filter = { [key]: obj[key].value || {} };
-        } else if (Array.isArray(obj[key])) {
-		    filter = { [key]: { _contains: obj[key] } };
-        } else {
-            let [keyName, operation = ''] = key.split('@')
-            const field = resource.type.fields.find(f => f.name === keyName);
-            switch (getFinalType(field.type).name) {
-                case 'String':
-                    operation = operation || '_ilike'
-                    filter = { [keyName]: { [operation]:  operation.includes('like') ? `%${obj[key]}%` :  obj[key]} };
-                    break;
-                default:
-                    filter = { [keyName]: { [ operation || '_eq']: obj[key] } };
-            }
-        }
-        return [...acc, filter];
-    }
-    const andFilters = Object.keys(filterObj).reduce(filterReducer(filterObj), customFilters);
-    const orFilters = Object.keys(orFilterObj).reduce(filterReducer(orFilterObj), []);
-
-    result['where'] = { _and: andFilters, ...orFilters.length && { _or: orFilters } };
-
-    if (params.pagination) {
-        result['limit'] = parseInt(params.pagination.perPage, 10);
-        result['offset'] = parseInt(
-            (params.pagination.page - 1) * params.pagination.perPage,
-            10
-        );
-    }
-
-    if (params.sort) {
-        result['order_by'] = set({}, params.sort.field, params.sort.order.toLowerCase());
->>>>>>> build variables raw query precedence
     }
     return [...acc, filter];
   };
