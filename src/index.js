@@ -32,7 +32,6 @@ export {
   defaultGetResponseParser,
 };
 import buildQuery from './buildQuery';
-import buildGqlQuery from './buildGqlQuery';
 import buildVariables from './buildVariables'
 
 export { buildQuery, buildGqlQuery, buildVariables };
