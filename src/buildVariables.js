@@ -57,7 +57,7 @@ const buildGetListVariables = (introspectionResults) => (
   const filterReducer = (obj) => (acc, key) => {
     let filter;
     if (key === 'ids') {
-      filter = { id: { _contained_in: obj['ids'] } };
+      filter = { id: { _in: obj['ids'] } };
     } else if (Array.isArray(obj[key])) {
       filter = { [key]: { _contained_in: obj[key] } };
     } else if (obj[key] && obj[key].format === 'hasura-raw-query') {
@@ -186,7 +186,7 @@ export default (introspectionResults) => (
     case GET_MANY:
     case DELETE_MANY:
       return {
-        where: { id: { _contained_in: params.ids } },
+        where: { id: { _in: params.ids } },
       };
 
     case GET_ONE:
@@ -218,7 +218,7 @@ export default (introspectionResults) => (
     case UPDATE_MANY:
       return {
         _set: buildUpdateVariables(resource, aorFetchType, params, queryType),
-        where: { id: { _contained_in: params.ids } },
+        where: { id: { _in: params.ids } },
       };
   }
 };
