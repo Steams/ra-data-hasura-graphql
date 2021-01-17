@@ -57,9 +57,9 @@ const buildGetListVariables = (introspectionResults) => (
   const filterReducer = (obj) => (acc, key) => {
     let filter;
     if (key === 'ids') {
-      filter = { id: { _in: obj['ids'] } };
+      filter = { id: { _contained_in: obj['ids'] } };
     } else if (Array.isArray(obj[key])) {
-      filter = { [key]: { _in: obj[key] } };
+      filter = { [key]: { _contained_in: obj[key] } };
     } else if (obj[key] && obj[key].format === 'hasura-raw-query') {
       filter = { [key]: obj[key].value || {} };
     } else {
@@ -125,7 +125,7 @@ const buildUpdateVariables = (resource, aorFetchType, params, queryType) =>
     // https://github.com/marmelab/react-admin/issues/2414#issuecomment-428945402
 
     // TODO: To overcome this permission issue,
-    // it would be better to allow only permitted inputFields from *_set_input INPUT_OBJECT
+    // it would be better to allow only permitted inputFields from *_set_contained_input INPUT_OBJECT
     if (params.previousData && params.data[key] === params.previousData[key]) {
       return acc;
     }
@@ -186,7 +186,7 @@ export default (introspectionResults) => (
     case GET_MANY:
     case DELETE_MANY:
       return {
-        where: { id: { _in: params.ids } },
+        where: { id: { _contained_in: params.ids } },
       };
 
     case GET_ONE:
@@ -218,7 +218,7 @@ export default (introspectionResults) => (
     case UPDATE_MANY:
       return {
         _set: buildUpdateVariables(resource, aorFetchType, params, queryType),
-        where: { id: { _in: params.ids } },
+        where: { id: { _contained_in: params.ids } },
       };
   }
 };
