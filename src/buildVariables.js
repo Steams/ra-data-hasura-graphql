@@ -59,7 +59,7 @@ const buildGetListVariables = (introspectionResults) => (
     if (key === 'ids') {
       filter = { id: { _in: obj['ids'] } };
     } else if (Array.isArray(obj[key])) {
-      filter = { [key]: { _contains: obj[key] } };
+      filter = { [key]: { _contained_in: obj[key] } };
     } else if (obj[key] && obj[key].format === 'raw-query') {
       filter = { [key]: obj[key].value || {} };
     } else {
