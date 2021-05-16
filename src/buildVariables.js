@@ -59,25 +59,27 @@ const buildGetListVariables = (introspectionResults) => (
     if (key === 'ids') {
       filter = { id: { _in: obj['ids'] } };
     } else if (Array.isArray(obj[key])) {
-      filter = { [key]: { _in: obj[key] } };
-    } else if (obj[key] && obj[key].format === 'hasura-raw-query') {
+      filter = { [key]: { _has_keys_any: obj[key] } };
+    } else if (obj[key] && obj[key].format === 'raw-query') {
       filter = { [key]: obj[key].value || {} };
     } else {
       let [keyName, operation = ''] = key.split('@');
       const field = resource.type.fields.find((f) => f.name === keyName);
-      switch (getFinalType(field.type).name) {
-        case 'String':
-          operation = operation || '_ilike';
-          filter = {
-            [keyName]: {
-              [operation]: operation.includes('like')
-                ? `%${obj[key]}%`
-                : obj[key],
-            },
-          };
-          break;
-        default:
-          filter = { [keyName]: { [operation || '_eq']: obj[key] } };
+      if (field ) {
+        switch (getFinalType(field.type).name) {
+          case 'String':
+            operation = operation || '_ilike';
+            filter = {
+              [keyName]: {
+                [operation]: operation.includes('like')
+                  ? `%${obj[key]}%`
+                  : obj[key],
+              },
+            };
+            break;
+          default:
+            filter = { [keyName]: { [operation || '_eq']: obj[key] } };
+        }
       }
     }
     return [...acc, filter];
@@ -85,11 +87,11 @@ const buildGetListVariables = (introspectionResults) => (
   const andFilters = Object.keys(filterObj).reduce(
     filterReducer(filterObj),
     customFilters
-  );
+  ).filter(Boolean);
   const orFilters = Object.keys(orFilterObj).reduce(
     filterReducer(orFilterObj),
     []
-  );
+  ).filter(Boolean);
 
   result['where'] = {
     _and: andFilters,
@@ -123,7 +125,7 @@ const buildUpdateVariables = (resource, aorFetchType, params, queryType) =>
     // https://github.com/marmelab/react-admin/issues/2414#issuecomment-428945402
 
     // TODO: To overcome this permission issue,
-    // it would be better to allow only permitted inputFields from *_set_input INPUT_OBJECT
+    // it would be better to allow only permitted inputFields from *_set_contained_input INPUT_OBJECT
     if (params.previousData && params.data[key] === params.previousData[key]) {
       return acc;
     }

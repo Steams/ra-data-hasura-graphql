@@ -31,6 +31,10 @@ export {
   defaultBuildVariables,
   defaultGetResponseParser,
 };
+import buildQuery from './buildQuery';
+import buildVariables from './buildVariables'
+
+export { buildQuery, buildGqlQuery, buildVariables };
 
 const defaultOptions = {
   introspection: {
